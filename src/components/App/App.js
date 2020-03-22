@@ -2,6 +2,9 @@ import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
 import ContactForm from '../ContactForm/ContactForm';
 import ContactList from '../ContactList/ContactList';
+import ContactFilter from '../ContactFilter/ContactFilter';
+import filterContacts from '../../utils/filterContacs';
+import findContact from '../../utils/findContact';
 import { AppContainer, AppTitle, AppSubTitle } from './App.styled';
 import './App.css';
 
@@ -13,6 +16,12 @@ export default class App extends Component {
       { id: 'id-3', name: 'Eden Clements', number: '645-17-79' },
       { id: 'id-4', name: 'Annie Copeland', number: '227-91-26' },
     ],
+    filter: '',
+  };
+
+  changeFilter = e => {
+    const { value } = e.target;
+    this.setState({ filter: value });
   };
 
   addContact = contact => {
@@ -23,7 +32,7 @@ export default class App extends Component {
       id: uuidv4(),
     };
 
-    const stateContact = contacts.find(item => item.name === contact.name);
+    const stateContact = findContact(contacts, contact);
 
     if (stateContact) {
       alert(`${contact.name} is already in contacts.`);
@@ -42,14 +51,22 @@ export default class App extends Component {
   };
 
   render() {
-    const { contacts } = this.state;
+    const { contacts, filter } = this.state;
+
+    const filteredContacts = filterContacts(contacts, filter);
 
     return (
       <AppContainer>
         <AppTitle>Phonebook</AppTitle>
         <ContactForm onAddContact={this.addContact} />
         <AppSubTitle>Contacts</AppSubTitle>
-        <ContactList items={contacts} onDeleteContact={this.deleteContact} />
+        {contacts.length >= 2 && (
+          <ContactFilter value={filter} onChangeFilter={this.changeFilter} />
+        )}
+        <ContactList
+          items={filteredContacts}
+          onDeleteContact={this.deleteContact}
+        />
       </AppContainer>
     );
   }
