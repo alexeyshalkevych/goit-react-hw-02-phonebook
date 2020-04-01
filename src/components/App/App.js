@@ -6,7 +6,6 @@ import ContactFilter from '../ContactFilter/ContactFilter';
 import filterContacts from '../../utils/filterContacs';
 import findContact from '../../utils/findContact';
 import { AppContainer, AppTitle, AppSubTitle } from './App.styled';
-import './App.css';
 
 export default class App extends Component {
   state = {
@@ -32,16 +31,32 @@ export default class App extends Component {
       id: uuidv4(),
     };
 
-    const stateContact = findContact(contacts, contact);
+    if (this.isValidContact(contact)) {
+      const stateContact = findContact(contacts, contact);
 
-    if (stateContact) {
-      alert(`${contact.name} is already in contacts.`);
-      return;
+      if (stateContact) {
+        alert(`${contact.name} is already in contacts.`);
+        return;
+      }
+
+      this.setState(state => ({
+        contacts: [...state.contacts, contactToAdd],
+      }));
+    }
+  };
+
+  isValidContact = ({ name, number }) => {
+    if (name.length <= 1 || name.trim() === 0) {
+      alert(`Your name is not valid. Please enter correct information.`);
+      return false;
     }
 
-    this.setState(state => ({
-      contacts: [...state.contacts, contactToAdd],
-    }));
+    if (!number.match(/^\(?([0-9]{3})\)?[- ]?([0-9]{2})[- ]?([0-9]{2})$/)) {
+      alert(`Your number is not valid. Please enter correct information.`);
+      return false;
+    }
+
+    return true;
   };
 
   deleteContact = id => {

@@ -47,4 +47,9 @@ export const Button = styled.button`
     cursor: pointer;
     background-color: rgb(19, 19, 138);
   }
+
+  :disabled {
+    background-color: rgb(85, 85, 85);
+    cursor: default;
+  }
 `;
