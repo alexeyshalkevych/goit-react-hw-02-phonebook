@@ -30,8 +30,9 @@ export default class ContactForm extends Component {
 
     setTimeout(() => {
       this.props.onAddContact({ name, number });
+
       this.setState({ disabled: false });
-    }, 1000);
+    }, 500);
 
     this.resetForm();
   };

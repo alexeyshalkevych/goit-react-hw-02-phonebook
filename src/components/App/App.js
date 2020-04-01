@@ -1,11 +1,13 @@
 import React, { Component } from 'react';
 import { v4 as uuidv4 } from 'uuid';
+import { ToastContainer, toast } from 'react-toastify';
 import ContactForm from '../ContactForm/ContactForm';
 import ContactList from '../ContactList/ContactList';
 import ContactFilter from '../ContactFilter/ContactFilter';
 import filterContacts from '../../utils/filterContacs';
 import findContact from '../../utils/findContact';
 import { AppContainer, AppTitle, AppSubTitle } from './App.styled';
+import 'react-toastify/dist/ReactToastify.css';
 
 export default class App extends Component {
   state = {
@@ -35,7 +37,7 @@ export default class App extends Component {
       const stateContact = findContact(contacts, contact);
 
       if (stateContact) {
-        alert(`${contact.name} is already in contacts.`);
+        toast.error(`${contact.name} is already in contacts.`);
         return;
       }
 
@@ -47,12 +49,14 @@ export default class App extends Component {
 
   isValidContact = ({ name, number }) => {
     if (name.length <= 1 || name.trim() === 0) {
-      alert(`Your name is not valid. Please enter correct information.`);
+      toast.error(`Your name is not valid. Please enter correct information.`);
       return false;
     }
 
     if (!number.match(/^\(?([0-9]{3})\)?[- ]?([0-9]{2})[- ]?([0-9]{2})$/)) {
-      alert(`Your number is not valid. Please enter correct information.`);
+      toast.error(
+        `Your number is not valid. Please enter correct information.`,
+      );
       return false;
     }
 
@@ -82,6 +86,7 @@ export default class App extends Component {
           items={filteredContacts}
           onDeleteContact={this.deleteContact}
         />
+        <ToastContainer autoClose={3000} />
       </AppContainer>
     );
   }
